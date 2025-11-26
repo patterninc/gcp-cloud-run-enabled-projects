@@ -1,0 +1,9 @@
+# Output files containing project IDs
+cloud-run-projects.txt
+cloud-run-projects-temp.txt
+
+# OS files
+.DS_Store
+*.swp
+*.swo
+*~
