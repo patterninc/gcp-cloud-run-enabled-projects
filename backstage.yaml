@@ -1,0 +1,17 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: gcp-cloud-run-enabled-projects
+  description: 'A Onboard an Existing Repo to Backstage created via Backstage'
+  annotations:
+    repo: patterninc/gcp-cloud-run-enabled-projects
+  labels:
+    CostCenter: SECURITY
+    Environment: stage
+    Name: gcp-cloud-run-enabled-projects
+    Owner: security-comm
+    Department: SECURITY
+    CreatedBy: Backstage
+spec:
+  type: service
+  system: security
