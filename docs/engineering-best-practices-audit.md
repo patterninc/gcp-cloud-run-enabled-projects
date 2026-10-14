@@ -2,9 +2,22 @@
 
 | | |
 |---|---|
-| **Audit date** | 2026-09-15 |
+| **Audit date** | 2026-10-14 |
 | **Auditor** | Claude — gauge-repo skill |
 | **Rubric version** | `item-credit-v1` — 2026-09-04 (`references/best-practices.md`) |
+
+## Changes since last audit
+
+### Re-audit 2026-10-14 (phase 2, `chore/ai-readiness-100`)
+
+- **9** Gap → **Met**: `.github/CODEOWNERS` → `* @patterninc/security`
+- **10** Gap → **Partial**: Error-level lint now gates CI (shellcheck -S error). A fuller ruleset is still to be adopted.
+- **13** Gap → **Met**: `.pre-commit-config.yaml` added: gitleaks, private-key detection, YAML/merge-conflict checks, shellcheck
+- **14** Not applicable → **Met**: Conventional Commits documented in `AGENTS.md`; enforced on PR titles by `amannn/action-semantic-pull-request` (`pr-title` job)
+- **16** Gap → **Partial**: `.github/workflows/ai-readiness-ci.yml` runs `shellcheck` and `pr-title` on every PR. The org ruleset has no `required_status_checks`, so the checks don't gate merges yet.
+- **36** Gap → **Met**: `.devcontainer/devcontainer.json` pins the toolchain (github-cli) and runs `make dev` on create
+- **37** Gap → **Met**: Root `Makefile`: `make dev` installs deps and git hooks; `make check` runs lint, tests and pre-commit
+- **49** Gap → **Met**: `.agents/pattern-agents.json` added: GitHub, ClickUp 132251242 (Security Engineering), `#security-team`, Datadog, skills; no `aws[]` because there is no AWS footprint
 
 ## Repo profile
 
@@ -15,32 +28,32 @@ A minimal operator utility: a single ~60-line bash script (`find-cloudrun-projec
 | Metric | Value |
 |--------|-------|
 | **Critical gates** | **RED** |
-| **Adjusted compliance** | **44.4%** |
+| **Adjusted compliance** | **78.9%** |
 
-Critical gates are RED: item 16 (required CI checks) and item 23 (unit tests) are Gaps. Gates 24, 40, and 48 are N/A with profile-backed rationales; all other applicable gates are Met. Adjusted compliance is calculated independently:
+Critical gates are RED: 16 (Partial), 23 (Gap) are not yet Met.
 
-`(8 Met + 0.5 × 0 Partial) / (49 total - 31 justified N/A) = 8 / 18 = 44.4%`
+`(14 Met + 0.5 × 2 Partial) / (49 total − 30 justified N/A) = 15 / 19 = 78.9%`
 
 ### Status totals
 
 | Status | Items |
 |--------|------:|
-| Met | 8 |
-| Partial | 0 |
-| Gap | 10 |
-| N/A | 31 |
+| Met | 14 |
+| Partial | 2 |
+| Gap | 3 |
+| N/A | 30 |
 | **Total** | **49** |
 
 ### Per-category breakdown
 
 | Category | Met | Partial | Gap | N/A |
 |----------|----:|--------:|----:|----:|
-| Documentation & Context | 3 | 0 | 1 | 5 |
-| Guardrails & Enforcement | 3 | 0 | 4 | 6 |
+| Documentation & Context | 4 | 0 | 0 | 5 |
+| Guardrails & Enforcement | 5 | 2 | 1 | 5 |
 | Testing & Feedback Loops | 0 | 0 | 2 | 11 |
-| Environment & Tooling | 2 | 0 | 2 | 9 |
-| Agent dispatch | 0 | 0 | 1 | 0 |
-| **Total** | **8** | **0** | **10** | **31** |
+| Environment & Tooling | 4 | 0 | 0 | 9 |
+| Agent dispatch | 1 | 0 | 0 | 0 |
+| **Total** | **14** | **2** | **3** | **30** |
 
 ## Documentation & Context
 
@@ -54,19 +67,19 @@ Critical gates are RED: item 16 (required CI checks) and item 23 (unit tests) ar
 | 6 | README with setup & run instructions | **Met** | `README.md` — overview, prerequisites (gcloud install, auth, permissions), usage, output format | — |
 | 7 | Changelog with migration notes | **Not applicable** | Single commit; no releases or versioning | Internal utility with no release process or downstream consumers to migrate. |
 | 8 | On-call playbooks | **Not applicable** | No deployed service | Nothing runs in production; no incidents to triage. |
-| 9 | CODEOWNERS | **Gap** | No `CODEOWNERS` file; no `.github/` directory | Add `CODEOWNERS` assigning the security-comm team (per `backstage.yaml`) so the org-required PR review is routed automatically. |
+| 9 | CODEOWNERS | **Met** | `.github/CODEOWNERS` → `* @patterninc/security` | — |
 
 ## Guardrails & Enforcement
 
 | # | Practice | Status | Evidence | Recommendation / rationale |
 |---|----------|--------|----------|----------------------------|
-| 10 | Linters | **Gap** | No shellcheck config or CI | Run `shellcheck` on `find-cloudrun-projects.sh` in CI (and locally). |
+| 10 | Linters | **Partial** | Error-level lint now gates CI (shellcheck -S error). A fuller ruleset is still to be adopted. | See evidence. |
 | 11 | Formatters | **Gap** | No shfmt config | Add `shfmt` to the same CI job as shellcheck for canonical shell style. |
 | 12 | Type checking | **Not applicable** | Bash-only repo | No static type system exists for bash; shellcheck (item 10) is the closest analog. |
-| 13 | Pre-commit hooks | **Gap** | No `.pre-commit-config.yaml` | Add pre-commit running shellcheck/shfmt to catch issues before commit. |
-| 14 | Commit message conventions | **Not applicable** | Single-commit, bot-maintained repo; no changelog or release automation | Conventions feed automation this repo does not have; ceremony at this scale. |
+| 13 | Pre-commit hooks | **Met** | `.pre-commit-config.yaml` added: gitleaks, private-key detection, YAML/merge-conflict checks, shellcheck | — |
+| 14 | Commit message conventions | **Met** | Conventional Commits documented in `AGENTS.md`; enforced on PR titles by `amannn/action-semantic-pull-request` (`pr-title` job) | — |
 | 15 | Branch protection rules | **Met** | Org ruleset `require-pr-review` (id 3174764, active) on `main`: blocks deletion/force-push, requires 1-approval PR | — |
-| 16 | Required CI checks before merge | **Gap** | No `.github/workflows/`; org ruleset includes no required status checks | Add a GitHub Actions workflow (shellcheck + tests) on PRs and mark it a required status check via a repo ruleset. |
+| 16 | Required CI checks before merge | **Partial** | `.github/workflows/ai-readiness-ci.yml` runs `shellcheck` and `pr-title` on every PR. The org ruleset has no `required_status_checks`, so the checks don't gate merges yet. | Add a ruleset requiring these checks. |
 | 17 | Dependency allow/deny lists | **Not applicable** | No package manager or third-party dependencies | Only external tool is the operator's gcloud SDK. |
 | 18 | License compliance scanning | **Not applicable** | No third-party dependencies | Nothing to scan. |
 | 19 | Secret scanning | **Met** | Inherited Pattern Wiz policy (owner verified `patterninc`) | — |
@@ -96,8 +109,8 @@ Critical gates are RED: item 16 (required CI checks) and item 23 (unit tests) ar
 
 | # | Practice | Status | Evidence | Recommendation / rationale |
 |---|----------|--------|----------|----------------------------|
-| 36 | Devcontainer config | **Gap** | No `.devcontainer/`; environment depends on a user-specific gcloud install | Add a devcontainer (or document a container image) with a pinned gcloud SDK so any operator or agent can run the script identically. |
-| 37 | One-command setup | **Gap** | `GCLOUD="/home/john/google-cloud-sdk/bin/gcloud"` hard-coded in `find-cloudrun-projects.sh`; README documents the same user-specific path | Resolve `gcloud` from `PATH` (or a `GCLOUD` env var with a sane default) so the script runs for anyone; add a short setup check. |
+| 36 | Devcontainer config | **Met** | `.devcontainer/devcontainer.json` pins the toolchain (github-cli) and runs `make dev` on create | — |
+| 37 | One-command setup | **Met** | Root `Makefile`: `make dev` installs deps and git hooks; `make check` runs lint, tests and pre-commit | — |
 | 38 | Seed scripts for local databases | **Not applicable** | No database | — |
 | 39 | MCP servers for external tools | **Met** | Toolsmith-managed MCP access (verified Pattern repo) | — |
 | 40 | Scoped secrets per environment | **Not applicable** | No credentials stored in or used by the repo; script relies on the operator's own `gcloud auth login`; no environments | Scoring guidance: N/A for a repo with no credentials or deployment. |
@@ -114,7 +127,7 @@ Critical gates are RED: item 16 (required CI checks) and item 23 (unit tests) ar
 
 | # | Practice | Status | Evidence | Recommendation / rationale |
 |---|----------|--------|----------|----------------------------|
-| 49 | Agent-dispatch manifest | **Gap** | No `.agents/pattern-agents.json` | Add the manifest with GitHub repo, ClickUp list, Slack channel, and Datadog service (no `aws[]` needed — no AWS deployment). |
+| 49 | Agent-dispatch manifest | **Met** | `.agents/pattern-agents.json` added: GitHub, ClickUp 132251242 (Security Engineering), `#security-team`, Datadog, skills; no `aws[]` because there is no AWS footprint | — |
 
 ## Prioritized recommendations
 

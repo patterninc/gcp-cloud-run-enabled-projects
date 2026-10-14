@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "github": {
+    "repo": "patterninc/gcp-cloud-run-enabled-projects"
+  },
+  "clickup_list_id": "132251242",
+  "slack_channel": "#security-team",
+  "datadog": {
+    "service": "gcp-cloud-run-enabled-projects",
+    "env": "production"
+  },
+  "skills": {
+    "plugins": [
+      "ai-sdlc"
+    ]
+  },
+  "checks": {
+    "command": "pre-commit run --all-files"
+  }
+}
