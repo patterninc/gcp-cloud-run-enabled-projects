@@ -48,3 +48,7 @@ Phase 2 and 3 features are documented in `PROJECT_GOALS.md` but not yet implemen
 - Phase 3: Bulk operations, automation, dashboards
 
 When extending this codebase, follow the phased approach outlined in PROJECT_GOALS.md.
+
+
+## Commits
+Use Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`, `ci:`). CI checks PR titles.
